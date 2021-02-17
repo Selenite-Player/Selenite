@@ -8,7 +8,8 @@ const createWindow = () =>  {
       nodeIntegration: true
     },
     transparent: true,
-    frame: false
+    frame: false,
+    title: "Selenite"
   })
 
   win.loadFile('public/index.html')
