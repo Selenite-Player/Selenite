@@ -3,6 +3,7 @@ const request = require('request')
 const cors = require('cors')
 const querystring = require('querystring')
 const cookieParser = require('cookie-parser')
+const main = require('./main.js')
 
 require('dotenv').config()
 
@@ -30,7 +31,7 @@ app.use(express.static(__dirname + '/public'))
 
 app.get('/login', (req, res) => {
   const state = generateRandomString(16)
-  const scope = 'user-read-private user-read-email'
+  const scope = 'user-read-private user-read-email user-read-playback-state user-read-currently-playing'
 
   res.cookie(stateKey, state)
 
@@ -74,22 +75,25 @@ app.get('/callback', (req, res) => {
               refresh_token = body.refresh_token
 
         const options = {
-          url: 'https://api.spotify.com/v1/me',
+          url: 'https://api.spotify.com/v1/me/player',
           headers: { 'Authorization': 'Bearer ' + access_token },
           json: true
         }
 
         // use the access token to access the Spotify Web API
         request.get(options, (error, response, body) => {
-          console.log(body)
+          main.startApp(body)
         })
 
+        res.send('success!')
+
         // we can also pass the token to the browser to make requests from there
-        res.redirect('/#' +
+        /* res.redirect('/#' +
           querystring.stringify({
             access_token: access_token,
             refresh_token: refresh_token
-          }))
+            https://api.spotify.com/v1/me/player
+          })) */
       } else {
         res.redirect('/#' +
           querystring.stringify({

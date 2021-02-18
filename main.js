@@ -1,7 +1,11 @@
+module.exports = {startApp:startApp}
 const { app, BrowserWindow, shell } = require('electron')
+const server = require('./index.js')
 
-const createWindow = () =>  {
-  const win = new BrowserWindow({
+let win
+
+function createWindow() {
+  win = new BrowserWindow({
     width: 450,
     height: 150,
     webPreferences: {
@@ -12,11 +16,20 @@ const createWindow = () =>  {
     title: "Selenite"
   })
 
-  win.loadFile('public/index.html')
   shell.openExternal("http://localhost:8888/login")
 }
 
-app.whenReady().then(createWindow)
+function startApp(body){
+  console.log(body)
+  win.loadFile('public/index.html')
+  win.webContents.on('did-finish-load', () => {
+    win.webContents.send('currently-playing', {
+      'title': body.item.name,
+      'artists': body.item.artists,
+      'image': body.item.album.images[0].url
+    })
+  })
+}
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
@@ -29,3 +42,5 @@ app.on('activate', () => {
     createWindow()
   }
 })
+
+app.whenReady().then(createWindow)
