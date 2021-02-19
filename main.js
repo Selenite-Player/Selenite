@@ -1,6 +1,8 @@
-module.exports = {startApp:startApp}
+module.exports = {startApp:startApp, authenticate: authenticate}
 const { app, BrowserWindow, shell } = require('electron')
 const auth = require('./auth.js')
+const settings = require("electron-settings")
+settings.configure({ fileName: 'Settings' })
 
 let win
 
@@ -16,7 +18,15 @@ function createWindow() {
     title: "Selenite"
   })
 
-  shell.openExternal("http://localhost:8888/login")
+  if(settings.hasSync("refresh_token")){
+    auth.refresh(settings.getSync("refresh_token"))
+  } else{
+    authenticate
+  }
+}
+
+function authenticate(){
+  shell.openExternal(auth.getAuthUrl())
 }
 
 function startApp(body){
