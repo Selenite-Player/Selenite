@@ -1,6 +1,6 @@
 module.exports = {startApp:startApp}
 const { app, BrowserWindow, shell } = require('electron')
-const server = require('./index.js')
+const auth = require('./auth.js')
 
 let win
 
@@ -20,7 +20,8 @@ function createWindow() {
 }
 
 function startApp(body){
-  console.log(body)
+  /* console.log(body) */
+  setInterval(auth.refresh, 60*59*1000)
   win.loadFile('public/index.html')
   win.webContents.on('did-finish-load', () => {
     win.webContents.send('currently-playing', {
