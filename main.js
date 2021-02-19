@@ -21,7 +21,7 @@ function createWindow() {
   if(settings.hasSync("refresh_token")){
     auth.refresh(settings.getSync("refresh_token"))
   } else{
-    authenticate
+    authenticate()
   }
 }
 
@@ -30,14 +30,15 @@ function authenticate(){
 }
 
 function startApp(body){
-  /* console.log(body) */
   setInterval(auth.refresh, 60*59*1000)
   win.loadFile('public/index.html')
   win.webContents.on('did-finish-load', () => {
     win.webContents.send('currently-playing', {
       'title': body.item.name,
       'artists': body.item.artists,
-      'image': body.item.album.images[0].url
+      'image': body.item.album.images[0].url,
+      'duration': body.item.duration_ms,
+      'progress': body.progress_ms
     })
   })
 }
