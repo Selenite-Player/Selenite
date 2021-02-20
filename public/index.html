@@ -23,9 +23,9 @@
       <div class="info-wrapper">
         <p id="song-title" class="song-title">Run Forever</p>
         <p id="artist" class="artist"><a href="#">Emma Ruth Rundle</a></p>
-        <input id="time-range" class="time-range" type="range" value="30" />
+        <input id="time-range" class="time-range" type="range" value="30" onchange="seek()"/>
         <div class="controls">
-          <i class="fa fa-random" aria-hidden="true"></i>
+          <i id="shuffle" class="fa fa-random" aria-hidden="true" onclick="shuffle()"></i>
           <i id="prev" class="fa fa-step-backward" aria-hidden="true" onclick="prev()"></i>
           <i id="play" class="fa fa-play" aria-hidden="true" onclick="play()"></i>
           <i id="next" class="fa fa-step-forward" aria-hidden="true" onclick="next()"></i>

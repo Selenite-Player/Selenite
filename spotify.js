@@ -9,7 +9,7 @@ const DEVICE_ID = process.env.DEVICE_ID
 function _fetch(url, method){
   return fetch(url, {
     method: method,
-    headers: { 'Authorization': 'Bearer ' + settings.getSync('access_token') },
+    headers: { 'Authorization': 'Bearer ' + settings.getSync('access_token') }
   })
   .catch(err => {
     console.log(err.message)
@@ -60,10 +60,20 @@ function prev(){
   return _fetch('https://api.spotify.com/v1/me/player/previous', 'POST')
 }
 
+function seek(timestamp){
+  return _fetch(`https://api.spotify.com/v1/me/player/seek?position_ms=${timestamp}`, 'PUT')
+}
+
+function shuffle(state){
+  return _fetch(`https://api.spotify.com/v1/me/player/shuffle?state=${state}`, 'PUT')
+}
+
 module.exports = { 
   getCurrentlyPlaying,
   resume,
   pause,
   next,
-  prev
+  prev,
+  seek,
+  shuffle
 }

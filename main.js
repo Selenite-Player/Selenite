@@ -39,14 +39,7 @@ function startApp(body){
   win.loadFile('public/index.html')
   if(!(body === null)){
     win.webContents.on('did-finish-load', () => {
-      win.webContents.send('currently-playing', {
-        'title': body.item.name,
-        'artists': body.item.artists,
-        'image': body.item.album.images[0].url,
-        'duration': body.item.duration_ms,
-        'progress': body.progress_ms,
-        'playing': body.is_playing
-      })
+      _updateInfo(body)
     })
   }
 }
@@ -79,14 +72,7 @@ ipcMain.on('update-info', () => {
   spotify.getCurrentlyPlaying(settings.getSync('access_token'))
     .then(body => {
       if(!(body == null)){
-        win.webContents.send('currently-playing', {
-          'title': body.item.name,
-          'artists': body.item.artists,
-          'image': body.item.album.images[0].url,
-          'duration': body.item.duration_ms,
-          'progress': body.progress_ms,
-          'playing': body.is_playing
-        })
+        _updateInfo(body)
       }
     })
     .catch(err => console.log(err))
@@ -101,5 +87,27 @@ ipcMain.on('prev', () => {
   spotify.prev()
     .catch(err => console.log(err))
 })
+
+ipcMain.on('seek', (event, timestamp) => {
+  spotify.seek(timestamp)
+    .catch(err => console.log(err))
+})
+
+ipcMain.on('shuffle', (event, shuffle_state) => {
+  spotify.shuffle(shuffle_state)
+    .catch(err => console.log(err))
+})
+
+function _updateInfo(body){
+  win.webContents.send('currently-playing', {
+    'title': body.item.name,
+    'artists': body.item.artists,
+    'image': body.item.album.images[0].url,
+    'duration': body.item.duration_ms,
+    'progress': body.progress_ms,
+    'playing': body.is_playing,
+    'shuffle_state': body.shuffle_state
+  })
+}
 
 app.whenReady().then(createWindow)
