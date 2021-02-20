@@ -68,6 +68,10 @@ function shuffle(state){
   return _fetch(`https://api.spotify.com/v1/me/player/shuffle?state=${state}`, 'PUT')
 }
 
+function repeat(state){
+  return _fetch(`https://api.spotify.com/v1/me/player/repeat?state=${state}`, 'PUT')
+}
+
 module.exports = { 
   getCurrentlyPlaying,
   resume,
@@ -75,5 +79,6 @@ module.exports = {
   next,
   prev,
   seek,
-  shuffle
+  shuffle,
+  repeat
 }

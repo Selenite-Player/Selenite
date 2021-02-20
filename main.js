@@ -98,6 +98,12 @@ ipcMain.on('shuffle', (event, shuffle_state) => {
     .catch(err => console.log(err))
 })
 
+ipcMain.on('repeat', (event, repeat_state) => {
+  console.log(repeat_state)
+  spotify.repeat(repeat_state)
+    .catch(err => console.log(err))
+})
+
 function _updateInfo(body){
   win.webContents.send('currently-playing', {
     'title': body.item.name,
@@ -106,7 +112,8 @@ function _updateInfo(body){
     'duration': body.item.duration_ms,
     'progress': body.progress_ms,
     'playing': body.is_playing,
-    'shuffle_state': body.shuffle_state
+    'shuffle_state': body.shuffle_state,
+    'repeat_state': body.repeat_state
   })
 }
 
