@@ -1,13 +1,25 @@
 const fetch = require('node-fetch')
 
+const settings = require('electron-settings')
+
 require('dotenv').config()
 
 const DEVICE_ID = process.env.DEVICE_ID
 
-function getCurrentlyPlaying(access_token) {
-  return fetch(`https://api.spotify.com/v1/me/player?device_id=${DEVICE_ID}`, {
-    method: 'GET',
-    headers: { 'Authorization': 'Bearer ' + access_token },
+function _fetch(url, method){
+  return fetch(url, {
+    method: method,
+    headers: { 'Authorization': 'Bearer ' + settings.getSync('access_token') },
+  })
+  .catch(err => {
+    console.log(err.message)
+  })
+}
+
+function _fetchResult(url, method){
+  return fetch(url, {
+    method: method,
+    headers: { 'Authorization': 'Bearer ' + settings.getSync('access_token') },
   })
   .then(res => {
     if(res.status == '204'){
@@ -19,7 +31,6 @@ function getCurrentlyPlaying(access_token) {
     if(json.error){
       console.log(json.error)
     } else {
-      console.log(json)
       return json
     }
   })
@@ -29,24 +40,30 @@ function getCurrentlyPlaying(access_token) {
   })
 }
 
-function resume(access_token){
-  return fetch(`https://api.spotify.com/v1/me/player/play?device_id=${DEVICE_ID}`, {
-    method: 'PUT',
-    headers: { 'Authorization': 'Bearer ' + access_token }
-  })
-  .catch(err => console.log(err.message))
+function getCurrentlyPlaying() {
+  return _fetchResult(`https://api.spotify.com/v1/me/player?device_id=${DEVICE_ID}`, 'GET')
 }
 
-function pause(access_token){
-  return fetch(`https://api.spotify.com/v1/me/player/pause?device_id=${DEVICE_ID}`, {
-    method: 'PUT',
-    headers: { 'Authorization': 'Bearer ' + access_token }
-  })
-  .catch(err => console.log(err.message))
+function resume(){
+  return _fetch(`https://api.spotify.com/v1/me/player/play?device_id=${DEVICE_ID}`, 'PUT')
+}
+
+function pause(){
+  return _fetch(`https://api.spotify.com/v1/me/player/pause?device_id=${DEVICE_ID}`, 'PUT')
+}
+
+function next(){
+  return _fetch('https://api.spotify.com/v1/me/player/next', 'POST')
+}
+
+function prev(){
+  return _fetch('https://api.spotify.com/v1/me/player/previous', 'POST')
 }
 
 module.exports = { 
   getCurrentlyPlaying,
   resume,
-  pause
+  pause,
+  next,
+  prev
 }

@@ -116,7 +116,8 @@ a:hover{
   margin-bottom: 10px;
 }
 
-.play-btn{
+.fa-play,
+.fa-pause{
   font-size: 2em;
 }
 

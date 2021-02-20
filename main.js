@@ -19,6 +19,10 @@ function createWindow() {
     title: "Selenite"
   })
 
+  if(settings.getSync('window-position')){
+    win.setPosition(...settings.getSync('window-position'))
+  }
+
   if(settings.hasSync("refresh_token")){
     auth.refresh(settings.getSync("refresh_token"))
   } else{
@@ -53,6 +57,10 @@ app.on('window-all-closed', () => {
   }
 })
 
+app.on('before-quit', () => {
+  settings.setSync('window-position', win.getPosition())
+})
+
 app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) {
     createWindow()
@@ -65,6 +73,33 @@ ipcMain.on('play', () => {
 
 ipcMain.on('pause', () => {
   spotify.pause(settings.getSync('access_token'))
+})
+
+ipcMain.on('update-info', () => {
+  spotify.getCurrentlyPlaying(settings.getSync('access_token'))
+    .then(body => {
+      if(!(body == null)){
+        win.webContents.send('currently-playing', {
+          'title': body.item.name,
+          'artists': body.item.artists,
+          'image': body.item.album.images[0].url,
+          'duration': body.item.duration_ms,
+          'progress': body.progress_ms,
+          'playing': body.is_playing
+        })
+      }
+    })
+    .catch(err => console.log(err))
+})
+
+ipcMain.on('next', () => {
+  spotify.next(settings.getSync('access_token'))
+    .catch(err => console.log(err))
+})
+
+ipcMain.on('prev', () => {
+  spotify.prev()
+    .catch(err => console.log(err))
 })
 
 app.whenReady().then(createWindow)
