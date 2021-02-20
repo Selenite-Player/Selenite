@@ -1,8 +1,9 @@
 module.exports = {startApp:startApp, authenticate: authenticate}
-const { app, BrowserWindow, shell } = require('electron')
+const { app, BrowserWindow, shell, ipcMain } = require('electron')
 const auth = require('./auth.js')
 const settings = require("electron-settings")
 settings.configure({ fileName: 'Settings' })
+const spotify = require('./spotify.js')
 
 let win
 
@@ -32,15 +33,18 @@ function authenticate(){
 function startApp(body){
   setInterval(auth.refresh, 60*59*1000)
   win.loadFile('public/index.html')
-  win.webContents.on('did-finish-load', () => {
-    win.webContents.send('currently-playing', {
-      'title': body.item.name,
-      'artists': body.item.artists,
-      'image': body.item.album.images[0].url,
-      'duration': body.item.duration_ms,
-      'progress': body.progress_ms
+  if(!(body === null)){
+    win.webContents.on('did-finish-load', () => {
+      win.webContents.send('currently-playing', {
+        'title': body.item.name,
+        'artists': body.item.artists,
+        'image': body.item.album.images[0].url,
+        'duration': body.item.duration_ms,
+        'progress': body.progress_ms,
+        'playing': body.is_playing
+      })
     })
-  })
+  }
 }
 
 app.on('window-all-closed', () => {
@@ -53,6 +57,14 @@ app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) {
     createWindow()
   }
+})
+
+ipcMain.on('play', () => {
+  spotify.resume(settings.getSync('access_token'))
+})
+
+ipcMain.on('pause', () => {
+  spotify.pause(settings.getSync('access_token'))
 })
 
 app.whenReady().then(createWindow)
