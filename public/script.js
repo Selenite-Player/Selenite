@@ -15,7 +15,7 @@ ipcRenderer.on('currently-playing', (e, data) => {
   document.getElementById("play").className = data.playing ? 'fa fa-pause' : 'fa fa-play'
   document.getElementById("shuffle").className = shuffle_state ? 'fa fa-random active' : 'fa fa-random'
   document.getElementById("song-title").innerText = data.title
-  document.getElementById("artist").innerText = data.artists.map(artist => artist.name)
+  document.getElementById("artist").innerText = data.artists.map(artist => artist.name).join(', ')
   document.getElementById("cover").src = data.image
   document.getElementById("time-range").max = data.duration
   document.getElementById("time-range").value = data.progress
