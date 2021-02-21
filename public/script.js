@@ -23,10 +23,19 @@ ipcRenderer.on('currently-playing', (e, data) => {
   let titleElement = document.getElementById('song-title')
   let scrollBox = document.getElementById('title-scroll-box')
 
+  let artistElement = document.getElementById('artist')
+  let box = document.getElementById('artist-scroll-box')
+
   if(titleElement.offsetWidth > scrollBox.offsetWidth){
     _addHover(scrollBox)
   } else{
     _removeHover(scrollBox)
+  }
+
+  if(artistElement.offsetWidth > box.offsetWidth){
+    _addHover(box)
+  } else{
+    _removeHover(box)
   }
 })
 
