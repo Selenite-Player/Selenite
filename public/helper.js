@@ -1,7 +1,13 @@
-const setDOMValues = (data) => {
+const initDOMValues = (data) => {
+  _getSongData(data)
   document.getElementById("repeat").className = _getRepeatClassName(data.repeat_state)
   document.getElementById("play").className = data.playing ? 'fa fa-pause' : 'fa fa-play'
   document.getElementById("shuffle").className = data.shuffle_state ? 'fa fa-random active' : 'fa fa-random'
+}
+
+const updateDOMValues = (data) => {_getSongData(data)}
+
+function _getSongData(data){
   document.getElementById("song-title").innerText = data.title
   document.getElementById("artist").innerText = data.artists.map(artist => artist.name).join(', ')
   document.getElementById("cover").src = data.image
@@ -25,6 +31,21 @@ const addTextScroll = () => {
   _addTextScroll(artistSpan, artistScrollBox)
 }
 
+const toggleClass = (icon, classes) => {
+  icon.className == classes[0] ? icon.className = classes[1] : icon.className = classes[0]
+}
+
+const getRepeatClassName = (repeat_state) => {
+  switch(repeat_state){
+    case 'track':
+      return 'fa fa-repeat active'
+    case 'context':
+      return 'fa fa-refresh active'
+    case 'off':
+      return 'fa fa-repeat'
+  }
+}
+
 function _addTextScroll(span, scrollBox) {
   span.offsetWidth > scrollBox.offsetWidth ? _addHover(scrollBox) : _removeHover(scrollBox)
 }
@@ -41,19 +62,11 @@ function _removeHover(el) {
   el.removeEventListener('mouseleave', _removeScroll)
 }
 
-function _getRepeatClassName(repeat_state){
-  switch(repeat_state){
-    case 'track':
-      return 'fa fa-repeat active'
-    case 'context':
-      return 'fa fa-refresh active'
-    case 'off':
-      return 'fa fa-repeat'
-  }
-}
-
 module.exports = {
   setState,
-  setDOMValues,
-  addTextScroll
+  initDOMValues,
+  updateDOMValues,
+  addTextScroll,
+  toggleClass,
+  getRepeatClassName
 }

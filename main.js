@@ -39,7 +39,7 @@ function startApp(body){
   win.loadFile('public/index.html')
   if(!(body === null)){
     win.webContents.on('did-finish-load', () => {
-      _updateInfo(body)
+      _updateInfo('init', body)
     })
   }
 }
@@ -72,7 +72,7 @@ ipcMain.on('update-info', () => {
   spotify.getCurrentlyPlaying(settings.getSync('access_token'))
     .then(body => {
       if(!(body == null)){
-        _updateInfo(body)
+        _updateInfo('currently-playing', body)
       }
     })
     .catch(err => console.log(err))
@@ -99,13 +99,12 @@ ipcMain.on('shuffle', (event, shuffle_state) => {
 })
 
 ipcMain.on('repeat', (event, repeat_state) => {
-  console.log(repeat_state)
   spotify.repeat(repeat_state)
     .catch(err => console.log(err))
 })
 
-function _updateInfo(body){
-  win.webContents.send('currently-playing', {
+function _updateInfo(channel, body){
+  win.webContents.send(channel, {
     'title': body.item.name,
     'artists': body.item.artists,
     'image': body.item.album.images[0].url,
