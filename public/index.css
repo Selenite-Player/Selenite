@@ -3,6 +3,7 @@ body{
   font-family: 'proxima-nova', 'Lato', sans-serif;
   margin: 0;
   height: 100vH;
+  -webkit-user-select: none;
 }
 
 .wrapper{

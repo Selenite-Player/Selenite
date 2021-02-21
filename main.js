@@ -16,7 +16,8 @@ function createWindow() {
     },
     transparent: true,
     frame: false,
-    title: "Selenite"
+    title: "Selenite",
+    resizable: false
   })
 
   if(settings.getSync('window-position')){
