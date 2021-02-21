@@ -83,7 +83,7 @@ a:hover{
 }
 
 .scrollBox{
-  width: 200px;
+  width: 210px;
   height: 30px;
   overflow: hidden;
   padding-top: 25px;
@@ -94,11 +94,11 @@ a:hover{
   position: absolute;
   white-space: nowrap;
   transform: translateX(0);
-  transition: 4s;
+  transition: 3s;
 }
 
-.scrollBox:hover span {
-  transform: translateX(calc(200px - 100%));
+.scrollBox .scroll{
+  transform: translateX(calc(210px - 100%));
 }
 
 .artist{

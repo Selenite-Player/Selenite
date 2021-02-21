@@ -19,7 +19,30 @@ ipcRenderer.on('currently-playing', (e, data) => {
   document.getElementById("cover").src = data.image
   document.getElementById("time-range").max = data.duration
   document.getElementById("time-range").value = data.progress
+
+  let titleElement = document.getElementById('song-title')
+  let scrollBox = document.getElementById('title-scroll-box')
+
+  if(titleElement.offsetWidth > scrollBox.offsetWidth){
+    _addHover(scrollBox)
+  } else{
+    _removeHover(scrollBox)
+  }
 })
+
+function _addScroll(event) { event.currentTarget.firstElementChild.classList.add('scroll') }
+function _removeScroll(event) { event.currentTarget.firstElementChild.classList.remove('scroll') }
+
+
+function _addHover(el){ 
+  el.addEventListener('mouseenter', _addScroll)
+  el.addEventListener('mouseleave', _removeScroll)
+}
+
+function _removeHover(el) {
+  el.removeEventListener('mouseenter', _addScroll)
+  el.removeEventListener('mouseleave', _removeScroll)
+}
 
 function play() {
   /* let icon = document.getElementById("play") */
