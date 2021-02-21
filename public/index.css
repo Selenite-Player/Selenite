@@ -77,10 +77,28 @@ a:hover{
 
 .song-title{
   font-size: 25px;
-  margin-bottom: 5px;
   font-weight: bold;
   color: rgba(35, 43, 43, 1);
   -webkit-app-region: drag;
+}
+
+.scrollBox{
+  width: 200px;
+  height: 30px;
+  overflow: hidden;
+  padding-top: 25px;
+  position: relative;
+}
+
+.scrollBox span {
+  position: absolute;
+  white-space: nowrap;
+  transform: translateX(0);
+  transition: 4s;
+}
+
+.scrollBox:hover span {
+  transform: translateX(calc(200px - 100%));
 }
 
 .artist{
