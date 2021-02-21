@@ -105,6 +105,10 @@ a:hover{
   transition: 3s;
 }
 
+#artist-scroll-box span{
+  transition: 2s;
+}
+
 .scrollBox .scroll{
   transform: translateX(calc(210px - 100%));
 }
