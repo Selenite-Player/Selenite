@@ -2,28 +2,20 @@
   "name": "selenite",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
-    "server": "node index.js",
-    "dev-server": "nodemon index.js",
     "app": "electron main.js"
   },
   "author": "Meike Hankewicz",
   "license": "ISC",
   "dependencies": {
-    "cookie-parser": "^1.4.5",
-    "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "electron-settings": "^4.0.2",
     "express": "^4.17.1",
-    "node-fetch": "^2.6.1",
-    "querystring": "^0.2.1",
-    "request": "^2.88.2",
-    "spotify-web-api-node": "^5.0.2"
+    "node-fetch": "^2.6.1"
   },
   "devDependencies": {
     "dotenv": "^8.2.0",
-    "electron": "^11.2.3",
-    "nodemon": "^2.0.7"
+    "electron": "^11.2.3"
   }
 }
