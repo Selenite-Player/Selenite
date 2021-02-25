@@ -1,6 +1,6 @@
 const initDOMValues = (data) => {
   _getSongData(data)
-  document.getElementById("repeat").className = _getRepeatClassName(data.repeat_state)
+  document.getElementById("repeat").className = getRepeatClassName(data.repeat_state)
   document.getElementById("play").className = data.playing ? 'fa fa-pause' : 'fa fa-play'
   document.getElementById("shuffle").className = data.shuffle_state ? 'fa fa-random active' : 'fa fa-random'
 }
@@ -16,9 +16,9 @@ function _getSongData(data){
 }
 
 const setState = (data) => {
-  playing = data.playing
-  shuffle_state = data.shuffle_state
-  repeat_state = data.repeat_state
+  playing: data.playing
+  shuffle_state: data.shuffle_state
+  repeat_state: data.repeat_state
 }
 
 const addTextScroll = () => {

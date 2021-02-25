@@ -4,12 +4,13 @@ const settings = require('electron-settings')
 
 require('dotenv').config()
 
-const DEVICE_ID = process.env.DEVICE_ID
+let DEVICE_ID = settings.hasSync('device_id') ? settings.getSync('device_id') : null
 
-function _fetch(url, method){
+function _fetch(url, method, body = null){
   return fetch(url, {
     method: method,
-    headers: { 'Authorization': 'Bearer ' + settings.getSync('access_token') }
+    headers: { 'Authorization': 'Bearer ' + settings.getSync('access_token') },
+    body
   })
   .catch(err => {
     console.log(err.message)
@@ -38,6 +39,28 @@ function _fetchResult(url, method){
     console.log(err.message)
     return null
   })
+}
+
+function getDeviceId(){
+  return _fetchResult('https://api.spotify.com/v1/me/player/devices', 'GET')
+    .then(data => {
+      let id = data.devices.filter(device => device.type === 'Computer')[0].id
+      return id
+    })
+    .catch(err => console.log(err.message))
+}
+
+function setDeviceId(id){
+  settings.setSync("device_id", id)
+  DEVICE_ID = id
+}
+
+function transferPlayback(deviceId){
+  console.log(deviceId)
+  return _fetch('https://api.spotify.com/v1/me/player', 'PUT', JSON.stringify({
+    device_ids: [deviceId],
+    play: true
+  }))
 }
 
 function getCurrentlyPlaying() {
@@ -73,6 +96,7 @@ function repeat(state){
 }
 
 module.exports = { 
+  transferPlayback,
   getCurrentlyPlaying,
   resume,
   pause,
@@ -80,5 +104,7 @@ module.exports = {
   prev,
   seek,
   shuffle,
-  repeat
+  repeat,
+  getDeviceId,
+  setDeviceId
 }

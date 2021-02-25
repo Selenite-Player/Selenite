@@ -1,9 +1,10 @@
 module.exports = {startApp:startApp, authenticate: authenticate}
 const { app, BrowserWindow, shell, ipcMain } = require('electron')
 const auth = require('./auth.js')
-const settings = require("electron-settings")
-settings.configure({ fileName: 'Settings' })
+const settings = require('electron-settings')
 const spotify = require('./spotify.js')
+
+settings.configure({ fileName: 'Settings' })
 
 let win
 
@@ -17,8 +18,10 @@ function createWindow() {
     transparent: true,
     frame: false,
     title: "Selenite",
-    resizable: false
+    /* resizable: false */
   })
+
+  win.webContents.openDevTools()
 
   if(settings.getSync('window-position')){
     win.setPosition(...settings.getSync('window-position'))
@@ -36,13 +39,19 @@ function authenticate(){
 }
 
 function startApp(body){
+  app.focus({steal: true})
   setInterval(auth.refresh, 60*59*1000)
   win.loadFile('public/index.html')
-  if(!(body === null)){
-    win.webContents.on('did-finish-load', () => {
+
+  win.webContents.on('did-finish-load', async () => {
+    if(!(body === null)){
       _updateInfo('init', body)
-    })
-  }
+    } else{
+      win.webContents.send('inactive-device', null)
+      let deviceId = await spotify.getDeviceId()
+      spotify.setDeviceId(deviceId)
+    }
+  })
 }
 
 app.on('window-all-closed', () => {
@@ -59,6 +68,17 @@ app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) {
     createWindow()
   }
+})
+
+ipcMain.on('activate-device', () => {
+  spotify.transferPlayback(settings.getSync('device_id')).catch(err => console.log(err.message))
+  spotify.getCurrentlyPlaying(settings.getSync('access_token'))
+    .then(body => {
+      if(!(body == null)){
+        _updateInfo("currently-playing", body)
+      }
+    })
+    .catch(err => console.log(err))
 })
 
 ipcMain.on('play', () => {

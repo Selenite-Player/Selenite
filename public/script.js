@@ -1,15 +1,23 @@
 const { ipcRenderer } = require('electron')
 const helper = require('./helper.js')
 
-let playing
-let shuffle_state
-let repeat_state
-const repeat_options = ['track', 'context', 'off']
+let state = {
+  active: true,
+  playing: null,
+  shuffle_state: null,
+  repeat_state: null,
+  repeat_options: ['track', 'context', 'off']
+}
 
 setInterval(() => ipcRenderer.send('update-info'), 1000)
 
+ipcRenderer.on('inactive-device', (e, data) => {
+  state.active = false
+})
+
 ipcRenderer.on('init', (e, data) => {
-  helper.setState(data)
+  state = {...state, ...helper.setState(data)}
+  console.log(state)
   helper.initDOMValues(data)
   helper.addTextScroll()
 })
@@ -21,8 +29,14 @@ ipcRenderer.on('currently-playing', (e, data) => {
 })
 
 function play() {
-  playing ? ipcRenderer.send('pause') : ipcRenderer.send('play')
-  playing = !playing
+  console.log(state.active)
+  if(!state.active){
+    ipcRenderer.send('activate-device')
+    state.active = true
+  }
+
+  /* state.playing ? ipcRenderer.send('pause') : ipcRenderer.send('play') */
+  state.playing = !state.playing
   helper.toggleClass(document.getElementById("play"), ["fa fa-play", "fa fa-pause"])
 }
 
@@ -41,13 +55,13 @@ function seek(){
 }
 
 function shuffle(){
-  ipcRenderer.send("shuffle", !shuffle_state)
+  ipcRenderer.send("shuffle", !state.shuffle_state)
   helper.toggleClass(document.getElementById("shuffle"), ['fa fa-random active', 'fa fa-random'])
 }
 
 function repeat() {
-  let i = repeat_options.indexOf(repeat_state)
+  let i = state.repeat_options.indexOf(state.repeat_state)
   let index = (i == 2) ? 0 : i+1
-  ipcRenderer.send("repeat", repeat_options[index])
-  document.getElementById('repeat').className = helper.getRepeatClassName(repeat_options[index])
+  ipcRenderer.send("repeat", state.repeat_options[index])
+  document.getElementById('repeat').className = helper.getRepeatClassName(state.repeat_options[index])
 }
