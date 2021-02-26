@@ -13,6 +13,10 @@ function _getSongData(data){
   document.getElementById("cover").src = data.image
   document.getElementById("time-range").max = data.duration
   document.getElementById("time-range").value = data.progress
+
+  document.getElementById("play").className = data.playing ? 'fa fa-pause' : 'fa fa-play'
+  document.getElementById("repeat").className = getRepeatClassName(data.repeat_state)
+  document.getElementById("shuffle").className = data.shuffle_state ? 'fa fa-random active' : 'fa fa-random'
 }
 
 const setState = (data) => {

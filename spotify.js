@@ -56,7 +56,6 @@ function setDeviceId(id){
 }
 
 function transferPlayback(deviceId){
-  console.log(deviceId)
   return _fetch('https://api.spotify.com/v1/me/player', 'PUT', JSON.stringify({
     device_ids: [deviceId],
     play: true
@@ -68,11 +67,11 @@ function getCurrentlyPlaying() {
 }
 
 function resume(){
-  return _fetch(`https://api.spotify.com/v1/me/player/play?device_id=${DEVICE_ID}`, 'PUT')
+  return _fetch(`https://api.spotify.com/v1/me/player/play?device_id=${settings.getSync("device_id")}`, 'PUT')
 }
 
 function pause(){
-  return _fetch(`https://api.spotify.com/v1/me/player/pause?device_id=${DEVICE_ID}`, 'PUT')
+  return _fetch(`https://api.spotify.com/v1/me/player/pause?device_id=${settings.getSync("device_id")}`, 'PUT')
 }
 
 function next(){

@@ -72,6 +72,7 @@ app.on('activate', () => {
 
 ipcMain.on('activate-device', () => {
   spotify.transferPlayback(settings.getSync('device_id')).catch(err => console.log(err.message))
+
   spotify.getCurrentlyPlaying(settings.getSync('access_token'))
     .then(body => {
       if(!(body == null)){
@@ -86,7 +87,7 @@ ipcMain.on('play', () => {
 })
 
 ipcMain.on('pause', () => {
-  spotify.pause(settings.getSync('access_token'))
+  spotify.pause(settings.getSync('access_token')).then(res => {console.log(res)})
 })
 
 ipcMain.on('update-info', () => {
@@ -125,6 +126,7 @@ ipcMain.on('repeat', (event, repeat_state) => {
 })
 
 function _updateInfo(channel, body){
+  settings.setSync('device_id', body.device.id)
   win.webContents.send(channel, {
     'title': body.item.name,
     'artists': body.item.artists,

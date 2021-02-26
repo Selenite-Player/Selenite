@@ -29,13 +29,12 @@ ipcRenderer.on('currently-playing', (e, data) => {
 })
 
 function play() {
-  console.log(state.active)
   if(!state.active){
     ipcRenderer.send('activate-device')
     state.active = true
   }
 
-  /* state.playing ? ipcRenderer.send('pause') : ipcRenderer.send('play') */
+  state.playing ? ipcRenderer.send('pause') : ipcRenderer.send('play')
   state.playing = !state.playing
   helper.toggleClass(document.getElementById("play"), ["fa fa-play", "fa fa-pause"])
 }
@@ -56,12 +55,14 @@ function seek(){
 
 function shuffle(){
   ipcRenderer.send("shuffle", !state.shuffle_state)
+  state.shuffle_state = !state.shuffle_state
   helper.toggleClass(document.getElementById("shuffle"), ['fa fa-random active', 'fa fa-random'])
 }
 
 function repeat() {
   let i = state.repeat_options.indexOf(state.repeat_state)
   let index = (i == 2) ? 0 : i+1
+  state.repeat_state = state.repeat_options[index]
   ipcRenderer.send("repeat", state.repeat_options[index])
   document.getElementById('repeat').className = helper.getRepeatClassName(state.repeat_options[index])
 }
