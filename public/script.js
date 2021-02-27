@@ -17,13 +17,12 @@ ipcRenderer.on('inactive-device', (e, data) => {
 
 ipcRenderer.on('init', (e, data) => {
   state = {...state, ...helper.setState(data)}
-  console.log(state)
   helper.initDOMValues(data)
   helper.addTextScroll()
 })
 
 ipcRenderer.on('currently-playing', (e, data) => {
-  helper.setState(data)
+  state = {...state, ...helper.setState(data)}
   helper.updateDOMValues(data)
   helper.addTextScroll()
 })
@@ -62,7 +61,7 @@ function shuffle(){
 function repeat() {
   let i = state.repeat_options.indexOf(state.repeat_state)
   let index = (i == 2) ? 0 : i+1
-  state.repeat_state = state.repeat_options[index]
   ipcRenderer.send("repeat", state.repeat_options[index])
+  state.repeat_state = state.repeat_options[index]
   document.getElementById('repeat').className = helper.getRepeatClassName(state.repeat_options[index])
 }

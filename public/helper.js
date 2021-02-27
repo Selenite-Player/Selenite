@@ -5,7 +5,9 @@ const initDOMValues = (data) => {
   document.getElementById("shuffle").className = data.shuffle_state ? 'fa fa-random active' : 'fa fa-random'
 }
 
-const updateDOMValues = (data) => {_getSongData(data)}
+const updateDOMValues = (data) => {
+  _getSongData(data)
+}
 
 function _getSongData(data){
   document.getElementById("song-title").innerText = data.title

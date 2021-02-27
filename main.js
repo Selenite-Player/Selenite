@@ -21,7 +21,7 @@ function createWindow() {
     /* resizable: false */
   })
 
-  win.webContents.openDevTools()
+  /* win.webContents.openDevTools() */
 
   if(settings.getSync('window-position')){
     win.setPosition(...settings.getSync('window-position'))
