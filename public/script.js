@@ -35,7 +35,9 @@ function play() {
 
   state.playing ? ipcRenderer.send('pause') : ipcRenderer.send('play')
   state.playing = !state.playing
-  helper.toggleClass(document.getElementById("play"), ["fa fa-play", "fa fa-pause"])
+
+  // setTimeout to bridge 1s update gap and avoid glitchy control toggle animations
+  setTimeout(() => helper.toggleClass(document.getElementById("play"), ["fa fa-play", "fa fa-pause"]), 200)
 }
 
 function next() {

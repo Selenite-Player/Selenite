@@ -22,9 +22,11 @@ function _getSongData(data){
 }
 
 const setState = (data) => {
-  playing: data.playing
-  shuffle_state: data.shuffle_state
-  repeat_state: data.repeat_state
+  return {
+    playing: data.playing,
+    shuffle_state: data.shuffle_state,
+    repeat_state: data.repeat_state
+  }
 }
 
 const addTextScroll = () => {

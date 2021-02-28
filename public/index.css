@@ -9,7 +9,7 @@ body{
 .wrapper{
   width: 400px;
   height: 150px;
-  background-color: white;
+  /* background-color: white; */
 }
 
 a{
@@ -27,11 +27,6 @@ a:hover{
   height: 100%;
   border-radius: 5px;
 }
-
-/* .one{
-  width: 450px;
-  height: 150px;
-} */
 
 .heading{
   font-weight: lighter;

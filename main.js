@@ -10,6 +10,7 @@ let win
 
 function createWindow() {
   win = new BrowserWindow({
+    hasShadow: false,
     width: 450,
     height: 150,
     webPreferences: {
@@ -22,6 +23,7 @@ function createWindow() {
   })
 
   /* win.webContents.openDevTools() */
+  
 
   if(settings.getSync('window-position')){
     win.setPosition(...settings.getSync('window-position'))
@@ -83,11 +85,11 @@ ipcMain.on('activate-device', () => {
 })
 
 ipcMain.on('play', () => {
-  spotify.resume(settings.getSync('access_token'))
+  spotify.resume(settings.getSync('access_token')).then(res => {console.log("play: ", res)})
 })
 
 ipcMain.on('pause', () => {
-  spotify.pause(settings.getSync('access_token')).then(res => {console.log(res)})
+  spotify.pause(settings.getSync('access_token')).then(res => {console.log("pause", res)})
 })
 
 ipcMain.on('update-info', () => {
