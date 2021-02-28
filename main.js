@@ -10,7 +10,6 @@ let win
 
 function createWindow() {
   win = new BrowserWindow({
-    hasShadow: false,
     width: 450,
     height: 150,
     webPreferences: {
@@ -19,6 +18,7 @@ function createWindow() {
     transparent: true,
     frame: false,
     title: "Selenite",
+    hasShadow: false
     /* resizable: false */
   })
 
@@ -70,6 +70,14 @@ app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) {
     createWindow()
   }
+})
+
+app.on('browser-window-blur', () => {
+  win.webContents.send('blur')
+})
+
+app.on('browser-window-focus', () => {
+  win.webContents.send('focus')
 })
 
 ipcMain.on('activate-device', () => {

@@ -27,6 +27,14 @@ ipcRenderer.on('currently-playing', (e, data) => {
   helper.addTextScroll()
 })
 
+ipcRenderer.on('blur', () => {
+  document.getElementById('window').style.backgroundImage = 'none'
+})
+
+ipcRenderer.on('focus', () => {
+  document.getElementById('window').style.backgroundImage = 'url("https://raw.githubusercontent.com/Schlenges/soggy-waffles/master/transparent.png")'
+})
+
 function play() {
   if(!state.active){
     ipcRenderer.send('activate-device')
@@ -65,5 +73,5 @@ function repeat() {
   let index = (i == 2) ? 0 : i+1
   ipcRenderer.send("repeat", state.repeat_options[index])
   state.repeat_state = state.repeat_options[index]
-  document.getElementById('repeat').className = helper.getRepeatClassName(state.repeat_options[index])
+  setTimeout(() => document.getElementById('repeat').className = helper.getRepeatClassName(state.repeat_options[index]), 200)
 }
