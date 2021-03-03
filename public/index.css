@@ -180,3 +180,20 @@ a:hover{
 .fa-list{
   margin-left: -40px;
 }
+
+#img-wrapper{
+  width: content;
+  position: relative;
+}
+
+.fa-heart-o,
+.fa-heart{
+  font-size: 22px;
+  position: absolute;
+  z-index: 4;
+  left: 3px;
+  top: 3px;
+  background-color: rgba(51, 51, 51, 0.3);
+  padding: 8px;
+  border-radius: 50px;
+}

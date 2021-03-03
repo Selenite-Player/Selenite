@@ -15,7 +15,7 @@ const REDIRECT_URI = process.env.REDIRECT_URI
 app.listen(8888)
 console.log('Listening on 8888')
 
-const scopes = ["user-modify-playback-state", "user-read-playback-state"]
+const scopes = ["user-modify-playback-state", "user-read-playback-state", "user-library-read", "user-library-modify"]
 let codeVerifier
 let codeChallenge
 

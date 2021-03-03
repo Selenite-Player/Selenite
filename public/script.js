@@ -6,7 +6,9 @@ let state = {
   playing: null,
   shuffle_state: null,
   repeat_state: null,
-  repeat_options: ['track', 'context', 'off']
+  repeat_options: ['track', 'context', 'off'],
+  song_id: null,
+  saved: false
 }
 
 setInterval(() => ipcRenderer.send('update-info'), 1000)
@@ -19,12 +21,18 @@ ipcRenderer.on('init', (e, data) => {
   state = {...state, ...helper.setState(data)}
   helper.initDOMValues(data)
   helper.addTextScroll()
+  helper.addLikeIconHover(data.is_saved)
 })
 
 ipcRenderer.on('currently-playing', (e, data) => {
+  let songId = {...state}.song_id
   state = {...state, ...helper.setState(data)}
   helper.updateDOMValues(data)
   helper.addTextScroll()
+
+  if(songId != state.song_id){
+    helper.addLikeIconHover(data.is_saved)
+  }
 })
 
 ipcRenderer.on('blur', () => {
@@ -74,4 +82,13 @@ function repeat() {
   ipcRenderer.send("repeat", state.repeat_options[index])
   state.repeat_state = state.repeat_options[index]
   setTimeout(() => document.getElementById('repeat').className = helper.getRepeatClassName(state.repeat_options[index]), 200)
+}
+
+function saveSong(){
+  if(state.song_id != null){
+    state.saved ? ipcRenderer.send("delete-song", state.song_id) : ipcRenderer.send("save-song", state.song_id)
+
+    state.saved = !state.saved
+    setTimeout(() => helper.toggleClass(document.getElementById("like-button"), ['fa fa-heart', 'fa fa-heart-o']), 200)
+  }
 }

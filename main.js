@@ -5,6 +5,7 @@ const settings = require('electron-settings')
 const spotify = require('./spotify.js')
 
 settings.configure({ fileName: 'Settings' })
+/* settings.reset(); */
 
 let win
 
@@ -135,8 +136,20 @@ ipcMain.on('repeat', (event, repeat_state) => {
     .catch(err => console.log(err))
 })
 
-function _updateInfo(channel, body){
+ipcMain.on('save-song', (event, song_Id) => {
+  spotify.saveSong(song_Id)
+    .catch(err => console.log(err))
+})
+
+ipcMain.on('delete-song', (event, song_Id) => {
+  spotify.deleteSong(song_Id)
+    .catch(err => console.log(err))
+})
+
+async function _updateInfo(channel, body){
   settings.setSync('device_id', body.device.id)
+
+  let isSaved = await spotify.isSavedSong(body.item.id).then(res => res[0]).catch(err => err)
   win.webContents.send(channel, {
     'title': body.item.name,
     'artists': body.item.artists,
@@ -145,7 +158,9 @@ function _updateInfo(channel, body){
     'progress': body.progress_ms,
     'playing': body.is_playing,
     'shuffle_state': body.shuffle_state,
-    'repeat_state': body.repeat_state
+    'repeat_state': body.repeat_state,
+    'song_id': body.item.id,
+    'is_saved': isSaved
   })
 }
 

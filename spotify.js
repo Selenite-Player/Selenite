@@ -94,6 +94,18 @@ function repeat(state){
   return _fetch(`https://api.spotify.com/v1/me/player/repeat?state=${state}`, 'PUT')
 }
 
+function saveSong(songId){
+  return _fetch(`https://api.spotify.com/v1/me/tracks?ids=${songId}`, 'PUT')
+}
+
+function deleteSong(songId){
+  return _fetch(`https://api.spotify.com/v1/me/tracks?ids=${songId}`, 'DELETE')
+}
+
+function isSavedSong(songId){
+  return _fetchResult(`https://api.spotify.com/v1/me/tracks/contains?ids=${songId}`, 'GET')
+}
+
 module.exports = { 
   transferPlayback,
   getCurrentlyPlaying,
@@ -104,6 +116,9 @@ module.exports = {
   seek,
   shuffle,
   repeat,
+  saveSong,
+  deleteSong,
   getDeviceId,
-  setDeviceId
+  setDeviceId,
+  isSavedSong
 }
