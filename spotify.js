@@ -63,7 +63,7 @@ function transferPlayback(deviceId){
 }
 
 function getCurrentlyPlaying() {
-  return _fetchResult(`https://api.spotify.com/v1/me/player?device_id=${DEVICE_ID}`, 'GET')
+  return _fetchResult(`https://api.spotify.com/v1/me/player?additional_types=episode&device_id=${DEVICE_ID}`, 'GET')
 }
 
 function resume(){

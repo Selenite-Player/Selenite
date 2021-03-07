@@ -8,7 +8,9 @@ const updateDOMValues = (data) => {
 
 function _getSongData(data){
   document.getElementById("song-title").innerText = data.title
-  document.getElementById("artist").innerText = data.artists.map(artist => artist.name).join(', ')
+  document.getElementById("artist").innerText = Array.isArray(data.artists)
+    ? data.artists.map(artist => artist.name).join(', ')
+    : data.artists
   document.getElementById("cover").src = data.image
   document.getElementById("time-range").max = data.duration
   document.getElementById("time-range").value = data.progress
@@ -16,9 +18,16 @@ function _getSongData(data){
   document.getElementById("play").className = data.playing ? 'fa fa-pause' : 'fa fa-play'
   document.getElementById("repeat").className = getRepeatClassName(data.repeat_state)
   document.getElementById("shuffle").className = data.shuffle_state ? 'fa fa-random active' : 'fa fa-random'
-  data.is_saved 
-    ? (document.getElementById("liked-icon").style = "display: inline;")
-    : (document.getElementById("liked-icon").style = "display: none;")
+
+  if(data.is_saved == null){
+    document.getElementById("liked-icon").style = "display: none;"
+    document.getElementById("like-button").style = "display: none;"
+  } else{
+    document.getElementById("like-button").style = "display: inline;"
+    data.is_saved 
+      ? (document.getElementById("liked-icon").style = "display: inline;")
+      : (document.getElementById("liked-icon").style = "display: none;")
+  }
 }
 
 const setState = (data) => {

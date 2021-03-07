@@ -148,20 +148,38 @@ ipcMain.on('delete-song', (event, song_Id) => {
 
 async function _updateInfo(channel, body){
   settings.setSync('device_id', body.device.id)
-
   let isSaved = await spotify.isSavedSong(body.item.id).then(res => res[0]).catch(err => err)
-  win.webContents.send(channel, {
-    'title': body.item.name,
-    'artists': body.item.artists,
-    'image': body.item.album.images[0].url,
-    'duration': body.item.duration_ms,
-    'progress': body.progress_ms,
-    'playing': body.is_playing,
-    'shuffle_state': body.shuffle_state,
-    'repeat_state': body.repeat_state,
-    'song_id': body.item.id,
-    'is_saved': isSaved
-  })
+  let data
+  if(body.currently_playing_type == 'track'){
+    data = {
+      'title': body.item.name,
+      'artists': body.item.artists,
+      'image': body.item.album.images[0].url,
+      'duration': body.item.duration_ms,
+      'progress': body.progress_ms,
+      'playing': body.is_playing,
+      'shuffle_state': body.shuffle_state,
+      'repeat_state': body.repeat_state,
+      'song_id': body.item.id,
+      'is_saved': isSaved
+    }
+  } else if(body.currently_playing_type == 'episode') {
+    data = {
+      'title': body.item.name,
+      'artists': body.item.show.name,
+      'image': body.item.images[0].url,
+      'duration': body.item.duration_ms,
+      'progress': body.progress_ms,
+      'playing': body.is_playing,
+      'shuffle_state': body.shuffle_state,
+      'repeat_state': body.repeat_state,
+      'song_id': body.item.id,
+      'is_saved': null
+    }
+  }
+
+  console.log(data)
+  win.webContents.send(channel, data)
 }
 
 app.whenReady().then(createWindow)
