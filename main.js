@@ -153,6 +153,7 @@ async function _updateInfo(channel, body){
     .then(res => res != null ? res[0]
       : (spotify.isSavedSong(body.item.id).then(res => res[0])))
     .catch(err => err)
+
   let data
   if(body.currently_playing_type == 'track'){
     data = {
@@ -182,7 +183,6 @@ async function _updateInfo(channel, body){
     }
   }
 
-  console.log(data)
   win.webContents.send(channel, data)
 }
 

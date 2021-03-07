@@ -8,7 +8,9 @@ let state = {
   repeat_state: null,
   repeat_options: ['track', 'context', 'off'],
   song_id: null,
-  saved: false
+  saved: false,
+  progress: null,
+  seek: null
 }
 
 setInterval(() => ipcRenderer.send('update-info'), 1000)
@@ -19,13 +21,21 @@ ipcRenderer.on('inactive-device', (e, data) => {
 
 ipcRenderer.on('init', (e, data) => {
   state = {...state, ...helper.setState(data)}
+  document.getElementById("time-range").value = state.progress
   helper.initDOMValues(data)
   helper.addTextScroll()
 })
 
 ipcRenderer.on('currently-playing', (e, data) => {
-  let songId = {...state}.song_id
   state = {...state, ...helper.setState(data)}
+
+  if(state.seek == null){
+    document.getElementById("time-range").value = state.progress
+  } else {
+    document.getElementById("time-range").value = state.seek
+    state.seek = null
+  }
+
   helper.updateDOMValues(data)
   helper.addTextScroll()
 })
@@ -64,7 +74,7 @@ function prev() {
 function seek(){
   let val = document.getElementById("time-range").value
   ipcRenderer.send("seek", val)
-  setTimeout(() => {document.getElementById("time-range").value = val}, 200)
+  state.seek = val
 }
 
 function shuffle(){

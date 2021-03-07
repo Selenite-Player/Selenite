@@ -17,8 +17,8 @@
     </span>
     <div class="data-wrapper">
       <div id="img-wrapper">
-        <i id="like-button" class="fa fa-heart-o outline" aria-hidden="true" onclick="saveSong()"></i>
-        <i id="liked-icon" class="fa fa-heart full" aria-hidden="true" onclick="saveSong()"></i>
+        <i id="like-button" class="fa fa-heart-o outline" aria-hidden="true" onclick="saveSong()" style="display: none;"></i>
+        <i id="liked-icon" class="fa fa-heart full" aria-hidden="true" onclick="saveSong()" style="display: none;"></i>
         <img 
           id="cover"
           class="cover box-shadow"
@@ -31,7 +31,7 @@
         <div id="artist-scroll-box" class="scrollBox">
           <span class="artist"><a id="artist" href="#">Hit play to activate Spotify</a></span>
         </div>
-        <input id="time-range" class="time-range" type="range" onchange="seek()"/>
+        <input id="time-range" class="time-range" type="range" value="0" onchange="seek()"/>
         <div class="controls">
           <i id="shuffle" class="fa fa-random" aria-hidden="true" onclick="shuffle()"></i>
           <i id="prev" class="fa fa-step-backward" aria-hidden="true" onclick="prev()"></i>
