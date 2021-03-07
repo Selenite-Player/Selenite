@@ -1,6 +1,5 @@
 const initDOMValues = (data) => {
   _getSongData(data)
-  document.getElementById("like-button").className = data.is_saved ? 'fa fa-heart' : 'fa fa-heart-o'
 }
 
 const updateDOMValues = (data) => {
@@ -17,6 +16,9 @@ function _getSongData(data){
   document.getElementById("play").className = data.playing ? 'fa fa-pause' : 'fa fa-play'
   document.getElementById("repeat").className = getRepeatClassName(data.repeat_state)
   document.getElementById("shuffle").className = data.shuffle_state ? 'fa fa-random active' : 'fa fa-random'
+  data.is_saved 
+    ? (document.getElementById("liked-icon").style = "display: inline;")
+    : (document.getElementById("liked-icon").style = "display: none;")
 }
 
 const setState = (data) => {
@@ -54,15 +56,6 @@ const getRepeatClassName = (repeat_state) => {
   }
 }
 
-function addLikeIconHover(saved){
-  saved 
-    ? _removeHover(document.getElementById('like-button'), [_addLikeIcon, _removeLikeIcon])
-    : _addHover(document.getElementById('like-button'), [_addLikeIcon, _removeLikeIcon])
-}
-
-function _addLikeIcon(event){ event.target.className = "fa fa-heart"}
-function _removeLikeIcon(event) { event.target.className = "fa fa-heart-o" }
-
 function _addTextScroll(span, scrollBox) {
   span.offsetWidth > scrollBox.offsetWidth 
     ? _addHover(scrollBox, [_addScroll, _removeScroll])
@@ -89,6 +82,5 @@ module.exports = {
   updateDOMValues,
   addTextScroll,
   toggleClass,
-  getRepeatClassName,
-  addLikeIconHover
+  getRepeatClassName
 }

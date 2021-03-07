@@ -21,7 +21,6 @@ ipcRenderer.on('init', (e, data) => {
   state = {...state, ...helper.setState(data)}
   helper.initDOMValues(data)
   helper.addTextScroll()
-  helper.addLikeIconHover(data.is_saved)
 })
 
 ipcRenderer.on('currently-playing', (e, data) => {
@@ -29,10 +28,6 @@ ipcRenderer.on('currently-playing', (e, data) => {
   state = {...state, ...helper.setState(data)}
   helper.updateDOMValues(data)
   helper.addTextScroll()
-
-  if(songId != state.song_id){
-    helper.addLikeIconHover(data.is_saved)
-  }
 })
 
 ipcRenderer.on('blur', () => {
@@ -89,6 +84,10 @@ function saveSong(){
     state.saved ? ipcRenderer.send("delete-song", state.song_id) : ipcRenderer.send("save-song", state.song_id)
 
     state.saved = !state.saved
-    setTimeout(() => helper.toggleClass(document.getElementById("like-button"), ['fa fa-heart', 'fa fa-heart-o']), 200)
+    setTimeout(() => {
+      document.getElementById("liked-icon").style.display == "none"
+        ? (document.getElementById("liked-icon").style.display = "inline")
+        : (document.getElementById("liked-icon").style.display = "none")
+    }, 200)
   }
 }

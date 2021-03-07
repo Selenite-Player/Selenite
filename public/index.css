@@ -197,3 +197,11 @@ a:hover{
   padding: 8px;
   border-radius: 50px;
 }
+
+.fa-heart:hover{
+  display: none;
+}
+
+.fa-heart-o:hover + .fa-heart, .fa-heart:hover{
+  display: inline !important;
+}
