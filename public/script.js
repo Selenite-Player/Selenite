@@ -62,7 +62,9 @@ function prev() {
 }
 
 function seek(){
-  ipcRenderer.send("seek", document.getElementById("time-range").value)
+  let val = document.getElementById("time-range").value
+  ipcRenderer.send("seek", val)
+  setTimeout(() => {document.getElementById("time-range").value = val}, 200)
 }
 
 function shuffle(){

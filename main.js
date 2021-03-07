@@ -148,7 +148,11 @@ ipcMain.on('delete-song', (event, song_Id) => {
 
 async function _updateInfo(channel, body){
   settings.setSync('device_id', body.device.id)
-  let isSaved = await spotify.isSavedSong(body.item.id).then(res => res[0]).catch(err => err)
+
+  let isSaved = await spotify.isSavedSong(body.item.id)
+    .then(res => res != null ? res[0]
+      : (spotify.isSavedSong(body.item.id).then(res => res[0])))
+    .catch(err => err)
   let data
   if(body.currently_playing_type == 'track'){
     data = {
