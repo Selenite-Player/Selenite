@@ -1,7 +1,9 @@
 # Selenite (beta) - A Minimalistic Spotify Player for MacOS
 <br/>
 
-![sth](./public/assets/giphy.gif)
+<p align="center">
+  <img src="./public/assets/big.gif" alt="Selenite Player">
+</p>
 
 Selenite is a simpler, more minimalistic alternative to navigate your Spotify playback. It supports song as well as podcast playback (including repeat and shuffle) and allows you to save or remove the currently playing song from your library.
 
