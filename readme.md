@@ -1,5 +1,4 @@
-# Selenite (beta)
-## A Minimalistic Spotify Player for MacOS
+# Selenite (beta) - A Minimalistic Spotify Player for MacOS
 <br/>
 
 ![sth](./public/assets/giphy.gif)
