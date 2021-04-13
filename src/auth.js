@@ -2,7 +2,7 @@ const express = require('express')
 const crypto = require("crypto")
 const fetch = require('node-fetch')
 const app = express()
-const main = require('./main.js')
+const main = require('../main.js')
 const spotify = require('./spotify.js')
 const settings = require("electron-settings")
 

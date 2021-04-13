@@ -1,8 +1,8 @@
 module.exports = {startApp:startApp, authenticate: authenticate}
 const { app, BrowserWindow, shell, ipcMain } = require('electron')
-const auth = require('./auth.js')
+const auth = require('./src/auth.js')
 const settings = require('electron-settings')
-const spotify = require('./spotify.js')
+const spotify = require('./src/spotify.js')
 
 settings.configure({ fileName: 'Settings' })
 /* settings.reset(); */
