@@ -94,11 +94,11 @@ ipcMain.on('activate-device', () => {
 })
 
 ipcMain.on('play', () => {
-  spotify.resume(settings.getSync('access_token')).then(res => {console.log("play: ", res)})
+  spotify.resume(settings.getSync('access_token'))
 })
 
 ipcMain.on('pause', () => {
-  spotify.pause(settings.getSync('access_token')).then(res => {console.log("pause", res)})
+  spotify.pause(settings.getSync('access_token'))
 })
 
 ipcMain.on('update-info', () => {

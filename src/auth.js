@@ -43,7 +43,6 @@ const getAuthUrl = () => {
       .replace(/=/g, '')
     }
 
-    console.log(authUrl)
     return authUrl
 }
 
