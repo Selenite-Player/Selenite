@@ -2,7 +2,7 @@
 <br/>
 
 <p align="center">
-  <img src="./public/assets/big.gif" alt="Selenite Player">
+  <img src="./public/assets/screenshot.jpg" alt="Selenite Player">
 </p>
 
 Selenite is a simpler, more minimalistic alternative to navigate your Spotify playback. It supports song as well as podcast playback (including repeat and shuffle) and allows you to save or remove the currently playing song from your library.
