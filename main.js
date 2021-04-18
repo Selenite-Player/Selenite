@@ -19,8 +19,8 @@ function createWindow() {
     transparent: true,
     frame: false,
     title: "Selenite",
-    hasShadow: false
-    /* resizable: false */
+    hasShadow: false,
+    resizable: false
   })
 
   /* win.webContents.openDevTools() */
