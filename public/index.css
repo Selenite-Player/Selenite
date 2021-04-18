@@ -4,7 +4,9 @@ body{
   margin: 0;
   height: 100vH;
   -webkit-user-select: none;
+  overflow: hidden;
 }
+
 
 .wrapper{
   width: 400px;
