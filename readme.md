@@ -1,4 +1,4 @@
-# Selenite (beta) - A Minimalistic Spotify Player for MacOS
+# Selenite (beta) - A Minimalistic Spotify Player
 <br/>
 
 <p align="center">
@@ -9,7 +9,7 @@ Selenite is a simpler, more minimalistic alternative to navigate your Spotify pl
 
 This version is still in beta. Future iterations will include browsing and managing your playlists, artist and album/podcast navigation, as well as UI updates (three different themes, UX improvements).
 
-A Windows version is also planned.  
 <br/>
+
 ## Installation
 (Instructions will follow)
