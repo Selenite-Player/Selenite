@@ -206,3 +206,26 @@ a:hover {
 .fa-heart:hover {
   display: inline !important;
 }
+
+.menu-input {
+  width: 100%;
+  text-align: center;
+  background-color: #333;
+  height: 100%;
+  padding: 10px;
+  color: #fff;
+}
+
+.menu-input input {
+  width: 350px;
+  height: 30px;
+  margin: 0 auto;
+}
+
+.menu-input a {
+  text-decoration: underline;
+}
+
+.menu-input a:hover {
+  color: #1db954;
+}

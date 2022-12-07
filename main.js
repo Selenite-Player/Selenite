@@ -1,9 +1,14 @@
 module.exports = {startApp:startApp, authenticate: authenticate}
-const { app, BrowserWindow, shell, ipcMain } = require('electron')
+const { app, BrowserWindow, shell, ipcMain, Menu, MenuItem } = require('electron')
 const auth = require('./src/auth.js')
 const settings = require('electron-settings')
 const spotify = require('./src/spotify.js')
+
 const Sentry = require("@sentry/electron");
+const path = require('path')
+require('electron-reload')(__dirname, {
+  electron: path.join(__dirname, 'node_modules', '.bin', 'electron')
+});
 
 require('dotenv').config()
 
@@ -41,6 +46,69 @@ function createWindow() {
     authenticate()
   }
 }
+
+/* SETTINGS MENU */
+
+const template = [
+  {
+    label: 'Config',
+    submenu: [
+      {
+        label: 'Add Spotify Client ID',
+        click() {
+          let menuWindow = new BrowserWindow({
+            width: 560,
+            height: 160,
+          })
+
+          menuWindow.loadFile('public/menuInput.html')
+        }
+      },
+      {
+        label: 'Add Device ID'
+      },
+      {
+        role: 'separator'
+      },
+      {
+        role: 'quit'
+      }
+    ]
+  },
+  {
+    label: 'View',
+    submenu: [
+      {
+        role: 'reload'
+     },
+     {
+        role: 'toggledevtools'
+     }
+    ]
+  },
+  {
+    role: 'window',
+    submenu: [
+      {
+        role: 'minimize'
+      },
+      {
+        role: 'close'
+      }
+    ]
+  },
+  {
+    role: 'help',
+    submenu: [
+      {
+        label: 'Learn More'
+      }
+    ]
+  }
+]
+
+const menu = Menu.buildFromTemplate(template)
+Menu.setApplicationMenu(menu)
 
 function authenticate(){
   shell.openExternal(auth.getAuthUrl())
