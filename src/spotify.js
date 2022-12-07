@@ -1,8 +1,11 @@
 const fetch = require('node-fetch')
-
 const settings = require('electron-settings')
+const Sentry = require("@sentry/electron");
 
 require('dotenv').config()
+
+Sentry.init({ dsn: process.env.SENTRY_DSN })
+
 
 let DEVICE_ID = settings.hasSync('device_id') ? settings.getSync('device_id') : null
 

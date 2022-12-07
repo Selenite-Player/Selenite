@@ -3,6 +3,11 @@ const { app, BrowserWindow, shell, ipcMain } = require('electron')
 const auth = require('./src/auth.js')
 const settings = require('electron-settings')
 const spotify = require('./src/spotify.js')
+const Sentry = require("@sentry/electron");
+
+require('dotenv').config()
+
+Sentry.init({ dsn: process.env.SENTRY_DSN })
 
 settings.configure({ fileName: 'Settings' })
 /* settings.reset(); */

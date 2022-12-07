@@ -5,8 +5,11 @@ const app = express()
 const main = require('../main.js')
 const spotify = require('./spotify.js')
 const settings = require("electron-settings")
+const Sentry = require("@sentry/electron");
 
 require('dotenv').config()
+
+Sentry.init({ dsn: process.env.SENTRY_DSN })
 
 const AUTH_URL = 'https://accounts.spotify.com/authorize'
 const CLIENT_ID = process.env.CLIENT_ID

@@ -1,5 +1,10 @@
 const { ipcRenderer } = require('electron')
 const helper = require('./helper.js')
+const Sentry = require("@sentry/electron");
+
+require('dotenv').config()
+
+Sentry.init({ dsn: process.env.SENTRY_DSN })
 
 let state = {
   active: true,
