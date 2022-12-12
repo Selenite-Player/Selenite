@@ -4,7 +4,7 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "app": "electron main.js"
+    "start": "electron main.js"
   },
   "author": "Meike Hankewicz",
   "license": "ISC",

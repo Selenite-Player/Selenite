@@ -6,7 +6,6 @@ require('dotenv').config()
 
 Sentry.init({ dsn: process.env.SENTRY_DSN })
 
-
 let DEVICE_ID = settings.hasSync('device_id') ? settings.getSync('device_id') : null
 
 function _fetch(url, method, body = null){
@@ -27,16 +26,9 @@ function _fetchResult(url, method){
   })
   .then(res => {
     if(res.status == '204'){
-      throw new Error('204 no content (inactive device)')
+      throw new Error('Inactive device (204 - No content)')
     }
     return res.json()
-  })
-  .then(json => {
-    if(json.error){
-      console.log(json.error)
-    } else {
-      return json
-    }
   })
   .catch(err => {
     console.log(err.message)
