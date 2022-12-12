@@ -1,5 +1,5 @@
 module.exports = {startApp:startApp, authenticate: authenticate}
-const { app, BrowserWindow, shell, ipcMain, Menu, MenuItem } = require('electron')
+const { app, BrowserWindow, shell, ipcMain, Menu } = require('electron')
 const auth = require('./src/auth.js')
 const settings = require('electron-settings')
 const spotify = require('./src/spotify.js')
@@ -35,7 +35,6 @@ function createWindow() {
 
   /* win.webContents.openDevTools() */
   
-
   if(settings.getSync('window-position')){
     win.setPosition(...settings.getSync('window-position'))
   }
@@ -57,8 +56,9 @@ const template = [
         label: 'Add Spotify Client ID',
         click() {
           let menuWindow = new BrowserWindow({
-            width: 560,
-            height: 160,
+            width: 520,
+            height: 180,
+            /* resizable: false */
           })
 
           menuWindow.loadFile('public/menuInput.html')
@@ -74,6 +74,29 @@ const template = [
         role: 'quit'
       }
     ]
+  },
+  {
+    label: 'Edit',
+      submenu: [
+        {
+          role: 'undo'
+        },
+        {
+          role: 'redo'
+        },
+        {
+          type: 'separator'
+        },
+        {
+          role: 'cut'
+        },
+        {
+          role: 'copy'
+        },
+        {
+          role: 'paste'
+        }
+      ]
   },
   {
     label: 'View',
@@ -121,7 +144,7 @@ function startApp(body){
 
   win.webContents.on('did-finish-load', async () => {
     if(!(body === null)){
-      _updateInfo('init', body)
+      _updateInfo('init', body).catch(err => console.log(err))
     } else{
       win.webContents.send('inactive-device', null)
       let deviceId = await spotify.getDeviceId()
@@ -160,7 +183,7 @@ ipcMain.on('activate-device', () => {
   spotify.getCurrentlyPlaying(settings.getSync('access_token'))
     .then(body => {
       if(!(body == null)){
-        _updateInfo("currently-playing", body)
+        _updateInfo("currently-playing", body).catch(err => console.log(err))
       }
     })
     .catch(err => console.log(err))
@@ -178,7 +201,7 @@ ipcMain.on('update-info', () => {
   spotify.getCurrentlyPlaying(settings.getSync('access_token'))
     .then(body => {
       if(!(body == null)){
-        _updateInfo('currently-playing', body)
+        _updateInfo('currently-playing', body).catch(err => console.log(err))
       }
     })
     .catch(err => console.log(err))
@@ -220,12 +243,12 @@ ipcMain.on('delete-song', (event, song_Id) => {
 })
 
 async function _updateInfo(channel, body){
-  settings.setSync('device_id', body.device.id)
-
   // TODO: No data left to skip to
   if(!body.item){ 
     return
   }
+
+  settings.setSync('device_id', body.device.id)
 
   let isSaved = await spotify.isSavedSong(body.item.id)
     .then(res => res != null ? res[0]
