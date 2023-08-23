@@ -22,9 +22,6 @@ const scopes = ["user-modify-playback-state", "user-read-playback-state", "user-
 let codeVerifier
 let codeChallenge
 
-/* let access_token
-let refresh_token */
-
 const setClientId = (id) => {
   CLIENT_ID = id
 }
@@ -64,7 +61,6 @@ app.get('/callback', (req, res) => {
   .then(res => res.json())
   .then( json => {
     if (json.error) {
-      // main.startAuth();
       console.log(json.error)
     } else {
       _saveTokens(json.access_token, json.refresh_token)
@@ -101,9 +97,6 @@ const refresh = () => {
 }
 
 function _saveTokens(access_token, refresh_token){
-  /* access_token = access_token */
-  /* refresh_token = refresh_token */
-
   settings.setSync({
     ...settings.getSync(),
     access_token,

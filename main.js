@@ -4,20 +4,18 @@ const { app, BrowserWindow, shell, ipcMain, Menu } = require('electron')
 const auth = require('./src/auth.js')
 const settings = require('electron-settings')
 const spotify = require('./src/spotify.js')
-
 const Sentry = require("@sentry/electron");
 const path = require('path')
+
 require('electron-reload')(__dirname, {
   electron: path.join(__dirname, 'node_modules', '.bin', 'electron')
-});
+})
 
 require('dotenv').config()
 
 Sentry.init({ dsn: process.env.SENTRY_DSN })
 
 settings.configure({ fileName: 'settings.json', prettify: true })
-
-/* settings.reset(); */
 
 let win;
 
@@ -36,7 +34,6 @@ function createWindow() {
   })
   
   if(settings.getSync('window-position')){
-    console.log(settings.getSync('window-position'))
     win.setPosition(...settings.getSync('window-position'))
   }
 
@@ -149,6 +146,7 @@ const template = [
 ]
 
 const menu = Menu.buildFromTemplate(template)
+
 Menu.setApplicationMenu(menu)
 
 function authenticate(){
@@ -274,11 +272,6 @@ ipcMain.on('delete-song', (event, song_Id) => {
 })
 
 async function _updateInfo(channel, body){
-  // TODO: No data left to skip to
-  if(!body.item){ 
-    return
-  }
-
   settings.setSync('device_id', body.device.id)
 
   let isSaved = await spotify.isSavedSong(body.item.id)
