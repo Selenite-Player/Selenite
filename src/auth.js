@@ -12,7 +12,7 @@ require('dotenv').config()
 Sentry.init({ dsn: process.env.SENTRY_DSN })
 
 const AUTH_URL = 'https://accounts.spotify.com/authorize'
-const CLIENT_ID = process.env.CLIENT_ID
+let CLIENT_ID = process.env.CLIENT_ID
 const REDIRECT_URI = process.env.REDIRECT_URI
 
 app.listen(8888)
@@ -81,7 +81,11 @@ const refresh = () => {
   .then(res => res.json())
   .then(json => {
     if (json.error) {
-      console.log('error', json)
+      if(json.error == 'invalid_client'){
+        console.log('invalid client id')
+      }
+      console.log(json)
+
       main.authenticate()
     } else {
       console.log("refreshed tokens")

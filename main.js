@@ -1,4 +1,5 @@
-module.exports = {startApp:startApp, authenticate: authenticate}
+module.exports = { startApp: startApp, authenticate: authenticate, openMenu: openMenuWindow }
+
 const { app, BrowserWindow, shell, ipcMain, Menu } = require('electron')
 const auth = require('./src/auth.js')
 const settings = require('electron-settings')
@@ -14,10 +15,11 @@ require('dotenv').config()
 
 Sentry.init({ dsn: process.env.SENTRY_DSN })
 
-settings.configure({ fileName: 'Settings' })
-settings.reset();
+settings.configure({ fileName: 'settings.json', prettify: true })
 
-let win
+/* settings.reset(); */
+
+let win;
 
 function createWindow() {
   win = new BrowserWindow({
@@ -30,12 +32,11 @@ function createWindow() {
     frame: false,
     title: "Selenite",
     hasShadow: false,
-    resizable: false
+    /* resizable: false */
   })
-
-  /* win.webContents.openDevTools() */
   
   if(settings.getSync('window-position')){
+    console.log(settings.getSync('window-position'))
     win.setPosition(...settings.getSync('window-position'))
   }
 
@@ -47,6 +48,29 @@ function createWindow() {
 }
 
 /* SETTINGS MENU */
+let menuWindow;
+
+function openMenuWindow() {
+  if(!menuWindow){
+    menuWindow = new BrowserWindow({
+      width: 520,
+      height: 180,
+      webPreferences: {
+        nodeIntegration: true
+      },
+      resizable: false
+    })
+
+    menuWindow.loadFile('public/menuInput.html')
+    
+    if(win){
+      let pos = win.getPosition();
+      menuWindow.setPosition(pos[0], pos[1]);
+    }
+
+    menuWindow.on('close', () => menuWindow = null);
+  } 
+}
 
 const template = [
   {
@@ -55,20 +79,14 @@ const template = [
       {
         label: 'Add Spotify Client ID',
         click() {
-          let menuWindow = new BrowserWindow({
-            width: 520,
-            height: 180,
-            /* resizable: false */
-          })
-
-          menuWindow.loadFile('public/menuInput.html')
+          openMenuWindow()
         }
       },
-      {
+      /* {
         label: 'Add Device ID'
-      },
+      }, */
       {
-        role: 'separator'
+        type: 'separator'
       },
       {
         role: 'quit'
@@ -165,7 +183,7 @@ app.on('before-quit', () => {
 
 app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow()
+    openMenuWindow()
   }
 })
 
@@ -175,6 +193,18 @@ app.on('browser-window-blur', () => {
 
 app.on('browser-window-focus', () => {
   win.webContents.send('focus')
+})
+
+ipcMain.on('add-client-id', (event, id) => {
+  settings.setSync({'client_id': id} )
+
+  /* if(settings.getSync('client_id').length > 0){
+    if(!win){
+      createWindow()
+    }
+  } else {
+    openMenuWindow()
+  } */
 })
 
 ipcMain.on('activate-device', () => {
