@@ -50,7 +50,7 @@ ipcRenderer.on('blur', () => {
 })
 
 ipcRenderer.on('focus', () => {
-  document.getElementById('window').style.backgroundImage = 'url("https://raw.githubusercontent.com/Schlenges/soggy-waffles/master/transparent.png")'
+  document.getElementById('window').style.backgroundImage = 'url("./assets/transparent.png")'
 })
 
 function play() {
