@@ -15,11 +15,13 @@
     <span class="menu">
       <!-- <i class="fa fa-list" aria-hidden="true"></i> -->
     </span>
+    <div class="draggable drag-container"></div>
     <div class="data-wrapper">
-      <div id="img-wrapper">
+      <div id="img-wrapper" class="draggable">
         <i id="like-button" class="fa fa-heart-o outline" aria-hidden="true" onclick="saveSong()" style="display: none;"></i>
         <i id="liked-icon" class="fa fa-heart full" aria-hidden="true" onclick="saveSong()" style="display: none;"></i>
         <img 
+          draggable="false"
           id="cover"
           class="cover box-shadow"
           src="https://i.redd.it/yrvxlnoce2j31.jpg" />

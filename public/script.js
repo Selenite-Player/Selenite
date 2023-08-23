@@ -49,9 +49,9 @@ ipcRenderer.on('blur', () => {
   document.getElementById('window').style.backgroundImage = 'none'
 })
 
-ipcRenderer.on('focus', () => {
+/* ipcRenderer.on('focus', () => {
   document.getElementById('window').style.backgroundImage = 'url("./assets/transparent.png")'
-})
+}) */
 
 function play() {
   if(!state.active){

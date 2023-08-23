@@ -29,6 +29,10 @@ a:hover {
   border-radius: 5px;
 }
 
+.draggable {
+  -webkit-app-region: drag;
+}
+
 .heading {
   font-weight: lighter;
 }
@@ -38,8 +42,13 @@ a:hover {
   padding-right: 20px;
 }
 
+.drag-container {
+  height: 50%;
+  width: 100%;
+  position: absolute;
+}
+
 .cover {
-  -webkit-app-region: drag;
   margin-right: 30px;
   height: 150px;
   width: 150px;
@@ -49,7 +58,7 @@ a:hover {
 }
 
 .cover:hover {
-  cursor: pointer;
+  /* cursor: pointer; */
   opacity: 1;
 }
 
@@ -74,11 +83,10 @@ a:hover {
   font-size: 25px;
   font-weight: bold;
   color: rgba(35, 43, 43, 1);
-  -webkit-app-region: drag;
 }
 
 .scrollBox {
-  width: 210px;
+  width: 100%;
   overflow: hidden;
   position: relative;
 }
