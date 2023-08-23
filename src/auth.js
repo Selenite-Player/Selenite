@@ -12,7 +12,7 @@ require('dotenv').config()
 Sentry.init({ dsn: process.env.SENTRY_DSN })
 
 const AUTH_URL = 'https://accounts.spotify.com/authorize'
-let CLIENT_ID = process.env.CLIENT_ID
+let CLIENT_ID = settings.getSync('client_id')
 const REDIRECT_URI = process.env.REDIRECT_URI
 
 app.listen(8888)
@@ -22,8 +22,12 @@ const scopes = ["user-modify-playback-state", "user-read-playback-state", "user-
 let codeVerifier
 let codeChallenge
 
-let access_token
-let refresh_token
+/* let access_token
+let refresh_token */
+
+const setClientId = (id) => {
+  CLIENT_ID = id
+}
 
 const getAuthUrl = () => {
   codeVerifier = _base64URLEncode(crypto.randomBytes(32))
@@ -65,7 +69,7 @@ app.get('/callback', (req, res) => {
     } else {
       _saveTokens(json.access_token, json.refresh_token)
       
-      spotify.getCurrentlyPlaying(access_token)
+      spotify.getCurrentlyPlaying(json.access_token)
         .then((data) => main.startApp(data))
     }
   })
@@ -97,15 +101,16 @@ const refresh = () => {
 }
 
 function _saveTokens(access_token, refresh_token){
-  access_token = access_token
-  refresh_token = refresh_token
+  /* access_token = access_token */
+  /* refresh_token = refresh_token */
 
   settings.setSync({
+    ...settings.getSync(),
     access_token,
     refresh_token
   })
 }
 
-module.exports = { getAuthUrl, refresh }
+module.exports = { getAuthUrl, refresh, setClientId }
 
 /* A refresh token that has been obtained through PKCE can be exchanged for an access token only once, after which it becomes invalid. */

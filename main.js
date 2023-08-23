@@ -196,15 +196,16 @@ app.on('browser-window-focus', () => {
 })
 
 ipcMain.on('add-client-id', (event, id) => {
-  settings.setSync({'client_id': id} )
+  auth.setClientId(id)
+  settings.setSync('client_id', id )
 
-  /* if(settings.getSync('client_id').length > 0){
+  if(settings.getSync('client_id').length > 0){
     if(!win){
       createWindow()
     }
   } else {
     openMenuWindow()
-  } */
+  }
 })
 
 ipcMain.on('activate-device', () => {
@@ -318,4 +319,10 @@ async function _updateInfo(channel, body){
   win.webContents.send(channel, data)
 }
 
-app.whenReady().then(createWindow)
+app.whenReady().then(() => {
+  if(!settings.getSync('client_id')){
+    openMenuWindow()
+  } else {
+    createWindow()
+  }
+})
