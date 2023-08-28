@@ -24,6 +24,7 @@ let codeChallenge
 
 const setClientId = (id) => {
   CLIENT_ID = id
+  return refresh();
 }
 
 const getAuthUrl = () => {
@@ -33,21 +34,21 @@ const getAuthUrl = () => {
   const authUrl = `${AUTH_URL}?response_type=code&client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&code_challenge=${codeChallenge}&code_challenge_method=S256&scope=${scopes}`
     // &state=${codeState} This can be used to mitigate cross-site request forgery attacks.
   
-    function _sha256(str) {
-      return crypto.createHash('sha256')
-      .update(str)
-      .digest()
-    }
-  
-    function _base64URLEncode(str) {
-      return new Buffer.from(str)
-      .toString('base64')
-      .replace(/\+/g, '-')
-      .replace(/\//g, '_')
-      .replace(/=/g, '')
-    }
+  function _sha256(str) {
+    return crypto.createHash('sha256')
+    .update(str)
+    .digest()
+  }
 
-    return authUrl
+  function _base64URLEncode(str) {
+    return new Buffer.from(str)
+    .toString('base64')
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=/g, '')
+  }
+
+  return authUrl
 }
 
 app.get('/callback', (req, res) => {
@@ -62,6 +63,7 @@ app.get('/callback', (req, res) => {
   .then( json => {
     if (json.error) {
       console.log(json.error)
+      // handle invalid client id
     } else {
       _saveTokens(json.access_token, json.refresh_token)
       
@@ -72,7 +74,7 @@ app.get('/callback', (req, res) => {
 })
 
 // Request refreshed access token
-const refresh = () => {
+const refresh = () => 
   fetch('https://accounts.spotify.com/api/token', {
     method: 'POST',
     headers: {'Content-Type':'application/x-www-form-urlencoded'},
@@ -82,10 +84,10 @@ const refresh = () => {
   .then(json => {
     if (json.error) {
       if(json.error == 'invalid_client'){
-        console.log('invalid client id')
+        throw new Error('invalid client')
       }
-      console.log(json)
 
+      console.log(json)
       main.authenticate()
     } else {
       console.log("refreshed tokens")
@@ -94,7 +96,6 @@ const refresh = () => {
         .then((data) => main.startApp(data))
     }
   })
-}
 
 function _saveTokens(access_token, refresh_token){
   settings.setSync({

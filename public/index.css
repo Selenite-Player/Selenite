@@ -184,6 +184,15 @@ a:hover {
   font-size: 1.3em;
 }
 
+.warning {
+  color: #ff4545;
+  display: none;
+}
+
+.show {
+  display: block;
+}
+
 .fa-list {
   margin-left: -40px;
 }
