@@ -6,7 +6,7 @@
     <br>
   </p>
   <a href="https://github.com/Selenite-Player/Selenite">
-    <img src="https://raw.githubusercontent.com/mhanki/mhanki.github.io/master/public/images/selenite.png" alt="Selenite Screenshot">
+    <img src="./public/assets/preview.png" alt="Selenite Screenshot">
   </a> 
 </p>
 
