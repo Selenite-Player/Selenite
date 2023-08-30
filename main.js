@@ -14,14 +14,12 @@ require("electron-reload")(__dirname, {
   electron: path.join(__dirname, "node_modules", ".bin", "electron"),
 });
 
-require("dotenv").config();
-
-const Sentry = require("@sentry/electron");
-Sentry.init({ dsn: process.env.SENTRY_DSN });
-
 settings.configure({ fileName: "settings.json", prettify: true });
 
+/* -------------- Window Management -------------- */
+
 let mainWindow;
+let menuWindow;
 
 function createMainWindow() {
   mainWindow = new BrowserWindow({
@@ -48,27 +46,27 @@ function createMainWindow() {
   }
 }
 
-let menuWindow;
-
-function openMenuWindow(options) {
-  if (!menuWindow) {
-    menuWindow = new BrowserWindow({
-      width: 520,
-      height: 180,
-      webPreferences: {
-        nodeIntegration: true,
-      },
-      resizable: false,
-    });
-
-    if (mainWindow) {
-      let pos = mainWindow.getPosition();
-      menuWindow.setPosition(pos[0], pos[1]);
-    };
-
-    menuWindow.loadFile("public/menuInput.html");
-    menuWindow.on("close", () => (menuWindow = null));
+function openMenuWindow() {
+  if (menuWindow) {
+    return;
   }
+
+  menuWindow = new BrowserWindow({
+    width: 520,
+    height: 180,
+    webPreferences: {
+      nodeIntegration: true,
+    },
+    resizable: false,
+  });
+
+  if (mainWindow) {
+    let pos = mainWindow.getPosition();
+    menuWindow.setPosition(pos[0], pos[1]);
+  }
+
+  menuWindow.loadFile("public/menuInput.html");
+  menuWindow.on("close", () => (menuWindow = null));
 }
 
 const menuTemplate = [
@@ -148,11 +146,14 @@ const menuTemplate = [
 ];
 
 const menu = Menu.buildFromTemplate(menuTemplate);
+
 Menu.setApplicationMenu(menu);
+
+/* -------------- Functions -------------- */
 
 function authenticate() {
   shell.openExternal(auth.getAuthUrl());
-};
+}
 
 function startApp(body) {
   app.focus({ steal: true });
@@ -163,7 +164,7 @@ function startApp(body) {
 
   mainWindow.webContents.on("did-finish-load", async () => {
     if (body) {
-      _updateInfo("init", body).catch((err) => console.log(err));
+      updateInfo("init", body).catch((err) => console.log(err));
     } else {
       mainWindow.webContents.send("inactive-device", null);
 
@@ -173,32 +174,69 @@ function startApp(body) {
   });
 }
 
-app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") {
-    app.quit();
-  };
-});
+async function updateInfo(channel, body) {
+  settings.setSync("device_id", body.device.id);
 
-app.on("before-quit", () => {
-  settings.setSync("window-position", mainWindow.getPosition());
-});
+  let isSaved = await spotify
+    .isSavedSong(body.item.id)
+    .then((res) =>
+      res != null
+        ? res[0]
+        : spotify.isSavedSong(body.item.id).then((res) => res[0])
+    )
+    .catch((err) => {
+      throw new Error(err);
+    });
 
-app.on("activate", () => {
-  if (BrowserWindow.getAllWindows().length === 0) {
-    openMenuWindow();
-  };
-});
+  let data;
 
-app.on("browser-window-blur", () => {
-  mainWindow.webContents.send("blur");
-});
+  if (body.currently_playing_type == "track") {
+    data = {
+      title: body.item.name,
+      artists: body.item.artists,
+      image: body.item.album.images[0].url,
+      duration: body.item.duration_ms,
+      progress: body.progress_ms,
+      playing: body.is_playing,
+      shuffle_state: body.shuffle_state,
+      repeat_state: body.repeat_state,
+      song_id: body.item.id,
+      is_saved: isSaved,
+    };
+  } else if (body.currently_playing_type == "episode") {
+    data = {
+      title: body.item.name,
+      artists: body.item.show.name,
+      image: body.item.images[0].url,
+      duration: body.item.duration_ms,
+      progress: body.progress_ms,
+      playing: body.is_playing,
+      shuffle_state: body.shuffle_state,
+      repeat_state: body.repeat_state,
+      song_id: body.item.id,
+      is_saved: null,
+    };
+  }
 
-app.on("browser-window-focus", () => {
-  mainWindow.webContents.send("focus");
-});
+  mainWindow.webContents.send(channel, data);
+}
+
+const update = () => {
+  spotify
+    .getCurrentlyPlaying(settings.getSync("access_token"))
+    .then((body) => {
+      if (body) {
+        updateInfo("currently-playing", body).catch((err) => console.log(err));
+      }
+    })
+    .catch((err) => console.log(err));
+};
+
+/* -------------- ipcMain listeners -------------- */
 
 ipcMain.on("add-client-id", (event, id) => {
-  auth.setClientId(id)
+  auth
+    .setClientId(id)
     .then(() => {
       settings.setSync("client_id", id);
       if (!mainWindow) {
@@ -206,19 +244,9 @@ ipcMain.on("add-client-id", (event, id) => {
       }
       menuWindow.close();
     })
-    .catch(err => {
-      menuWindow.webContents.send('client-error')
+    .catch((err) => {
+      menuWindow.webContents.send("client-error");
     });
-
-  
-
-  /* if (settings.getSync("client_id").length > 0) {
-    if (!mainWindow) {
-      createMainWindow();
-    }
-  } else {
-    openMenuWindow();
-  } */
 });
 
 ipcMain.on("activate-device", () => {
@@ -271,63 +299,31 @@ ipcMain.on("delete-song", (event, song_Id) => {
   spotify.deleteSong(song_Id).catch((err) => console.log(err));
 });
 
-async function _updateInfo(channel, body) {
-  settings.setSync("device_id", body.device.id);
+/* -------------- App -------------- */
 
-  let isSaved = await spotify
-    .isSavedSong(body.item.id)
-    .then((res) =>
-      res != null
-        ? res[0]
-        : spotify.isSavedSong(body.item.id).then((res) => res[0])
-    )
-    .catch((err) => {
-      throw new Error(err);
-    });
-
-  let data;
-
-  if (body.currently_playing_type == "track") {
-    data = {
-      title: body.item.name,
-      artists: body.item.artists,
-      image: body.item.album.images[0].url,
-      duration: body.item.duration_ms,
-      progress: body.progress_ms,
-      playing: body.is_playing,
-      shuffle_state: body.shuffle_state,
-      repeat_state: body.repeat_state,
-      song_id: body.item.id,
-      is_saved: isSaved,
-    };
-  } else if (body.currently_playing_type == "episode") {
-    data = {
-      title: body.item.name,
-      artists: body.item.show.name,
-      image: body.item.images[0].url,
-      duration: body.item.duration_ms,
-      progress: body.progress_ms,
-      playing: body.is_playing,
-      shuffle_state: body.shuffle_state,
-      repeat_state: body.repeat_state,
-      song_id: body.item.id,
-      is_saved: null,
-    };
+app.on("window-all-closed", () => {
+  if (process.platform !== "darwin") {
+    app.quit();
   }
+});
 
-  mainWindow.webContents.send(channel, data);
-}
+app.on("before-quit", () => {
+  settings.setSync("window-position", mainWindow.getPosition());
+});
 
-const update = () => {
-  spotify
-    .getCurrentlyPlaying(settings.getSync("access_token"))
-    .then((body) => {
-      if (body) {
-        _updateInfo("currently-playing", body).catch((err) => console.log(err));
-      }
-    })
-    .catch((err) => console.log(err));
-};
+app.on("activate", () => {
+  if (BrowserWindow.getAllWindows().length === 0) {
+    openMenuWindow();
+  }
+});
+
+app.on("browser-window-blur", () => {
+  mainWindow.webContents.send("blur");
+});
+
+app.on("browser-window-focus", () => {
+  mainWindow.webContents.send("focus");
+});
 
 app.whenReady().then(() => {
   if (!settings.getSync("client_id")) {
