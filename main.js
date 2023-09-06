@@ -10,9 +10,9 @@ const settings = require("electron-settings");
 const spotify = require("./src/spotify.js");
 const path = require("path");
 
-require("electron-reload")(__dirname, {
+/* require("electron-reload")(__dirname, {
   electron: path.join(__dirname, "node_modules", ".bin", "electron"),
-});
+}); */
 
 settings.configure({ fileName: "settings.json", prettify: true });
 
@@ -346,6 +346,7 @@ app.on("window-all-closed", () => {
 });
 
 app.on("before-quit", () => {
+  if(!mainWindow){ return; };
   settings.setSync("window-position", mainWindow.getPosition());
 });
 
@@ -356,17 +357,21 @@ app.on("activate", () => {
 });
 
 app.on("browser-window-blur", () => {
+  if(!mainWindow){ return; };
   mainWindow.webContents.send("blur");
 });
 
 app.on("browser-window-focus", () => {
+  if(!mainWindow){ return; };
   mainWindow.webContents.send("focus");
 });
 
 app.whenReady().then(() => {
   if (!settings.getSync("client_id")) {
+    console.log("no settings")
     openClientMenuWindow();
   } else {
+    console.log(settings.getSync("client_id"))
     createMainWindow();
   }
 });
