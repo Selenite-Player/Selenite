@@ -90,9 +90,7 @@ const refresh = () =>
       } else {
         console.log("refreshed tokens");
         _saveTokens(json.access_token, json.refresh_token);
-        spotify
-          .getCurrentlyPlaying(json.access_token)
-          .then((data) => main.startApp(data));
+        spotify.getCurrentlyPlaying(json.access_token);
       }
     });
 
@@ -102,6 +100,6 @@ function _saveTokens(access_token, refresh_token) {
     access_token,
     refresh_token,
   });
-};
+}
 
 module.exports = { getAuthUrl, refresh, setClientId };

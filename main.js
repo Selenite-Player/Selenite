@@ -41,7 +41,8 @@ function createMainWindow() {
   }
 
   if (settings.hasSync("refresh_token")) {
-    auth.refresh();
+    auth.refresh()
+      .then(startApp());
   } else {
     authenticate();
   }
