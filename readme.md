@@ -15,8 +15,7 @@
 - [About the App](#about-the-app)
 - [Installation](#installation)
 - [Technical](#technical)
-- [Contributing](#contributing)
-- [Licence](#license)
+- [Bugs and Features](#bugs-and-features)
 
 ## About the App
 
@@ -65,13 +64,8 @@ You can play, pause, and skip tracks, as well as enable or disable shuffle and r
 
 You can find the project board with known issues and planned features for the app [here](https://github.com/orgs/Selenite-Player/projects/2).
 
-### Contributing
+### Bugs and Features
 
 - Found a **bug** or have a concrete **feature request**? Open a corresponding issue via the [Issues Tab](https://github.com/Selenite-Player/Selenite/issues).
 
 - For any other **feedback**, **questions**, or **ideas**, please use the [Discussions Tab](https://github.com/Selenite-Player/Selenite/discussions) to reach out.
-
-
-## License
-
-* see [LICENSE](https://github.com/YourUserNameHere/ProjectName/LICENSE.md) file
