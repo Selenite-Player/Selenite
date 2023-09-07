@@ -19,7 +19,7 @@
 
 ## About the App
 
-Selenite is a simpler, more minimalistic alternative to navigate your Spotify playback. It supports song as well as podcast playback and allows you to save or remove songs from your "liked songs" library.
+Selenite is a cleaner, more minimalist alternative for navigating your Spotify playback. It supports both song and podcast playback and allows you to save or remove songs from your "liked songs" library.
 
 ### How it works
 
@@ -29,8 +29,9 @@ To make this app available to everyone, Selenite uses [Spotify's free Web API](h
 
 1. Clone the [repository](https://github.com/Selenite-Player/Selenite).
 2. Install all dependencies via ```npm install```.
-3. Go through the [Spotify Setup](#spotify-setup) steps detailed in the next paragraph.
-4. Start the app with ```npm start```.
+3. Run ```npm run make``` to create an executable.
+4. Go through the [Spotify Setup](#spotify-setup) steps detailed in the next paragraph.
+5. Open the executable in the ```out/Selenite-darwin-x64``` folder to start the app.
 
 ### Spotify Setup
 
