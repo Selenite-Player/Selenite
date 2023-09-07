@@ -2,7 +2,7 @@
   <h1 align="center">Selenite</h1>
 
   <p align="center">
-     <strong>A clean and minimalistic desktop player for Spotify</strong>
+     <strong>A Clean and Minimalist Spotify Desktop Player for MacOS</strong>
     <br>
   </p>
   <a href="https://github.com/Selenite-Player/Selenite">
@@ -13,13 +13,14 @@
 
 ## Table of contents
 - [About the App](#about-the-app)
+- [Installation](#installation)
 - [Technical](#technical)
 - [Contributing](#contributing)
 - [Licence](#license)
 
 ## About the App
 
-Selenite is a cleaner, more minimalist alternative for navigating your Spotify playback. It supports both song and podcast playback and allows you to save or remove songs from your "liked songs" library.
+Selenite is a cleaner, more minimalist alternative for navigating your Spotify playback on MacOS. It supports both song and podcast playback and allows you to save or remove songs from your "liked songs" library.
 
 ### How it works
 
