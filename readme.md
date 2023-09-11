@@ -2,7 +2,7 @@
   <h1 align="center">Selenite</h1>
 
   <p align="center">
-     <strong>A Clean and Minimalist Spotify Desktop Player for MacOS</strong>
+     <strong>A Clean and Minimalist Spotify (Premium) Desktop Player for MacOS</strong>
     <br>
   </p>
   <a href="https://github.com/Selenite-Player/Selenite">
@@ -23,7 +23,9 @@ Selenite is a cleaner, more minimalist alternative for navigating your Spotify p
 
 ### How it works
 
-To make this app available to everyone, Selenite uses [Spotify's free Web API](https://developer.spotify.com/documentation/web-api/). This means the app runs alongside Spotify (whether you have Spotify running in your browser or any of the official apps). It won't replace the actual application you are listening with, but adds an extra interface to navigate the Spotify playback of whichever device or app you are using.
+**UPDATE: Since Spotify restricted all playback related endpoints to premium accounts, this app sadly no longer works with a free account :(**
+
+~To make this app available to everyone,~ Selenite uses [Spotify's Web API](https://developer.spotify.com/documentation/web-api/). This means the app runs alongside Spotify (whether you have Spotify running in your browser or any of the official apps). It won't replace the actual application you are listening with, but adds an extra interface to navigate the Spotify playback of whichever device or app you are using.
 
 ### Installation
 
@@ -39,8 +41,8 @@ To use this app, you will need to get a ```Client Id``` from Spotify and [add th
 
 1. Go to the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard/).
 2. Click on "_Create an App_" and enter a name and description of your choice.
-3. Once the app is registered, you will be redirected to the app overview page. Here you will find your ```Client ID```. You will need it later to authenticate your Spotify account.
-4. Next, you will have to add a _redirect URI_. Per default, Selenite is set to use port 8888, so the URI will be ```http://localhost:8888/callback```. If you want to run the app on a different port, you can change the port in Selenite's settings and adjust the callback URI accordingly. Back at the app overview page, click on "_Edit Settings_" and enter the URI under "_Redirect URIs_". Save, and you are all set to go!
+3. You also need to provide a _redirect URI_. Per default, Selenite is set to use port 8888, so the URI will be ```http://localhost:8888/callback```. If you want to run the app on a different port, you can change the port in Selenite's settings and adjust the callback URI accordingly.
+4. Once you save and the app is registered, you will be redirected to the app overview page. Here you will find your ```Client ID```. You will need it later to authenticate your Spotify account.
 
 ### Usage
 
